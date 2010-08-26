@@ -284,6 +284,7 @@ print the compiled JavaScript."
     (,coffee-prototype-regexp . font-lock-variable-name-face)
     (,coffee-assign-regexp . font-lock-type-face)
     (,coffee-regexp-regexp . font-lock-constant-face)
+    (,coffee-lambda-regexp . font-lock-function-name-face)
     (,coffee-boolean-regexp . font-lock-constant-face)
     (,coffee-keywords-regexp . font-lock-keyword-face)))
 

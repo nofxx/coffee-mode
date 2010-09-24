@@ -202,6 +202,9 @@ Naturally. Example:
       ;; If you don't have js2-mode
       (setq coffee-js-mode 'javascript-mode)
 
+      ;; If you don't want your compiled files to be wrapped
+      (setq coffee-args-compile '("-c" "--no-wrap"))
+
       ;; *Messages* spam
       (setq coffee-debug-mode t)
 
@@ -211,10 +214,10 @@ Naturally. Example:
       ;; Riding edge.
       (setq coffee-command "~/dev/coffee"))
 
-      ;; Compile JS on every save, unless it's a Cakefile.
+      ;; Compile '.coffee' files on every save
       (add-hook 'after-save-hook
           '(lambda ()
-             (when (not (string= (buffer-name) "Cakefile"))
+             (when (string-match "\.coffee$" (buffer-name))
               (coffee-compile-file))))
 
     (add-hook 'coffee-mode-hook '(lambda () (coffee-custom)))
@@ -267,10 +270,9 @@ Default: `'("-i")`
 
 ### coffee-args-compile
 
-The command line arguments to pass to `coffee-command' to get it
-toprint the compiled JavaScript.
+The command line arguments to pass to `coffee-command' when compiling a file.
 
-Default: `'("-s" "-p" "--no-wrap")`
+Default: `'("-c")`
 
 ### coffee-compiled-buffer-name
 

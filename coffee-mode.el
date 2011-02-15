@@ -202,7 +202,7 @@ path."
                        nil
                        "-s" "-p" "--bare")
   (switch-to-buffer (get-buffer coffee-compiled-buffer-name))
-  (funcall js-mode)
+  (funcall coffee-js-mode)
   (goto-char (point-min)))
 
 (defun coffee-show-version ()
@@ -589,7 +589,7 @@ line? Returns `t' or `nil'. See the README for more details."
   "Major mode for editing CoffeeScript..."
 
   ;; key bindings
-  (define-key coffee-mode-map (kbd "M-p") 'coffee-execute-file)
+  (define-key coffee-mode-map (kbd "A-p") 'coffee-execute-file)
   (define-key coffee-mode-map (kbd "A-r") 'coffee-compile-buffer)
   (define-key coffee-mode-map (kbd "A-R") 'coffee-compile-region)
   (define-key coffee-mode-map (kbd "A-M-r") 'coffee-repl)

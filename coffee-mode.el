@@ -173,7 +173,9 @@ path."
                 (get-buffer-create coffee-executed-buffer-name))
 
   (message "Compiled OK")
-  (switch-to-buffer (get-buffer coffee-executed-buffer-name)))
+  (if (one-window-p)
+    (switch-to-buffer (get-buffer coffee-executed-buffer-name))
+    (switch-to-buffer-other-window (get-buffer coffee-executed-buffer-name))))
 
 (defun coffee-compile-file ()
   "Compiles and saves the current file to disk. Doesn't open in a buffer.."
@@ -201,7 +203,10 @@ path."
                        (get-buffer-create coffee-compiled-buffer-name)
                        nil
                        "-s" "-p" "--bare")
-  (switch-to-buffer (get-buffer coffee-compiled-buffer-name))
+  (if (one-window-p)
+    (switch-to-buffer (get-buffer coffee-compiled-buffer-name))
+    (switch-to-buffer-other-window (get-buffer coffee-compiled-buffer-name)))
+
   (funcall coffee-js-mode)
   (goto-char (point-min)))
 
@@ -590,7 +595,7 @@ line? Returns `t' or `nil'. See the README for more details."
 
   ;; key bindings
   (define-key coffee-mode-map (kbd "A-p") 'coffee-execute-file)
-  (define-key coffee-mode-map (kbd "A-r") 'coffee-compile-buffer)
+  (define-key coffee-mode-map (kbd "A-l") 'coffee-compile-buffer)
   (define-key coffee-mode-map (kbd "A-R") 'coffee-compile-region)
   (define-key coffee-mode-map (kbd "A-M-r") 'coffee-repl)
   (define-key coffee-mode-map [remap comment-dwim] 'coffee-comment-dwim)

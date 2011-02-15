@@ -114,6 +114,11 @@ path."
   :type 'string
   :group 'coffee)
 
+(defcustom coffee-executed-buffer-name "*coffee-run*"
+  "The name of the scratch buffer used when executing CoffeeScript."
+  :type 'string
+  :group 'coffee)
+
 (defvar coffee-mode-hook nil
   "A hook for you to run your own code when the mode is loaded.")
 
@@ -154,7 +159,21 @@ path."
      (apply 'make-comint "CoffeeREPL"
             coffee-command nil coffee-args-repl)))
 
-  (pop-to-buffer "*CoffeeScript*"))
+  (pop-to-buffer "*CoffeeREPL*"))
+
+(defun coffee-execute-file ()
+  "Executes the file with coffee."
+  (interactive)
+
+  (let ((buffer (get-buffer coffee-executed-buffer-name)))
+    (when buffer
+      (kill-buffer buffer)))
+
+  (call-process coffee-command buffer-file-name
+                (get-buffer-create coffee-executed-buffer-name))
+
+  (message "Compiled OK")
+  (switch-to-buffer (get-buffer coffee-executed-buffer-name)))
 
 (defun coffee-compile-file ()
   "Compiles and saves the current file to disk. Doesn't open in a buffer.."
@@ -183,7 +202,7 @@ path."
                        nil
                        "-s" "-p" "--bare")
   (switch-to-buffer (get-buffer coffee-compiled-buffer-name))
-  (funcall coffee-js-mode)
+  (funcall js-mode)
   (goto-char (point-min)))
 
 (defun coffee-show-version ()
@@ -213,6 +232,7 @@ path."
 (easy-menu-define coffee-mode-menu coffee-mode-map
   "Menu for CoffeeScript mode"
   '("CoffeeScript"
+    ["Execute File" coffee-execute-file]
     ["Compile File" coffee-compile-file]
     ["Compile Buffer" coffee-compile-buffer]
     ["Compile Region" coffee-compile-region]
@@ -238,7 +258,7 @@ path."
 (defvar coffee-prototype-regexp "\\(\\(\\w\\|\\.\\|_\\| \\|$\\)+?\\)::\\(\\(\\w\\|\\.\\|_\\| \\|$\\)+?\\):")
 
 ;; Assignment
-(defvar coffee-assign-regexp "\\(\\(\\w\\|\\.\\|_\\| \\|$\\)+?\\):")
+(defvar coffee-assign-regexp "\\(\\(\\w\\|\\.\\|_\\| \\|$\\)+?\\)[:=]")
 
 ;; Lambda
 (defvar coffee-lambda-regexp "\\((.+)\\)?\\s *\\(->\\|=>\\)")
@@ -569,6 +589,7 @@ line? Returns `t' or `nil'. See the README for more details."
   "Major mode for editing CoffeeScript..."
 
   ;; key bindings
+  (define-key coffee-mode-map (kbd "M-p") 'coffee-execute-file)
   (define-key coffee-mode-map (kbd "A-r") 'coffee-compile-buffer)
   (define-key coffee-mode-map (kbd "A-R") 'coffee-compile-region)
   (define-key coffee-mode-map (kbd "A-M-r") 'coffee-repl)

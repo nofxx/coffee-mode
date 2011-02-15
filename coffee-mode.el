@@ -228,6 +228,9 @@ path."
 ;; Define Language Syntax
 ;;
 
+;; String literals
+(defvar coffee-string-regexp "\"\\([^\\]\\|\\\\.\\)*?\"\\|'\\([^\\]\\|\\\\.\\)*?'")
+
 ;; Instance variables (implicit this)
 (defvar coffee-this-regexp "@\\(\\w\\|_\\)*\\|this")
 
@@ -247,14 +250,14 @@ path."
 (defvar coffee-boolean-regexp "\\b\\(true\\|false\\|yes\\|no\\|on\\|off\\|null\\)\\b")
 
 ;; Regular Expressions
-(defvar coffee-regexp-regexp "\\/.+?\\/")
+(defvar coffee-regexp-regexp "\\/\\([^\\]\\|\\\\.\\)+?\\/")
 
 ;; JavaScript Keywords
 (defvar coffee-js-keywords
       '("if" "else" "new" "return" "try" "catch"
         "finally" "throw" "break" "continue" "for" "in" "while"
         "delete" "instanceof" "typeof" "switch" "super" "extends"
-        "class"))
+        "class" "until" "loop"))
 
 ;; Reserved keywords either by JS or CS.
 (defvar coffee-js-reserved
@@ -281,10 +284,12 @@ path."
   ;; *Note*: order below matters. `coffee-keywords-regexp' goes last
   ;; because otherwise the keyword "state" in the function
   ;; "state_entry" would be highlighted.
-  `((,coffee-this-regexp . font-lock-variable-name-face)
+  `((,coffee-string-regexp . font-lock-string-face)
+    (,coffee-this-regexp . font-lock-variable-name-face)
     (,coffee-prototype-regexp . font-lock-variable-name-face)
     (,coffee-assign-regexp . font-lock-type-face)
     (,coffee-regexp-regexp . font-lock-constant-face)
+    (,"\\(->\\|=>\\)" . font-lock-function-name-face)
     (,coffee-boolean-regexp . font-lock-constant-face)
     (,coffee-keywords-regexp . font-lock-keyword-face)))
 
@@ -579,7 +584,6 @@ line? Returns `t' or `nil'. See the README for more details."
   (setq comment-start "#")
 
   ;; single quote strings
-  (modify-syntax-entry ?' "\"" coffee-mode-syntax-table)
   (modify-syntax-entry ?' "\"" coffee-mode-syntax-table)
 
   ;; indentation
